@@ -1,3 +1,5 @@
+> Japanese-learning fork: setup, WaniKani, and upstream-update instructions are in [docs/japanese.md](docs/japanese.md).
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/lh_banner_dark.png">

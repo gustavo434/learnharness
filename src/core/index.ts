@@ -81,3 +81,4 @@ export * from "./coverage.ts";
 // export share it. Pure, browser-safe.
 export * from "./session-markdown.ts";
 export { isComposingKey } from "./ime.ts";
+export { DEFAULT_JAPANESE_SETTINGS, type JapaneseSettings, type JapaneseStatus } from "./japanese.ts";

@@ -1,0 +1,34 @@
+name: Japanese fork checks
+
+on:
+  pull_request:
+  push:
+    branches: [codex/japanese-learning]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: japanese-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TZ: UTC
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: node scripts/build-server.mjs
+      - run: node scripts/smoke-japanese.mjs
