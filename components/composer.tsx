@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingKey } from "@/src/core";
+
 import { ArrowRightIcon, CornerDownLeftIcon, SquareIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Hint } from "@/components/ui/hint";
@@ -95,6 +97,7 @@ export function Composer({
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
 				onKeyDown={(e) => {
+					if (isComposingKey(e)) return;
 					// Esc ends dictation before anything else Esc might someday mean
 					// here (the dictate decisions: click-again or Esc to stop).
 					// stopPropagation claims the Esc (keyboard wave A): the

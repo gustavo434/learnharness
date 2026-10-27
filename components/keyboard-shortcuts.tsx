@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingKey } from "@/src/core";
+
 /**
  * Keyboard shortcuts (shortcut wave A, 2026-09-17) — the single document-level
  * keydown listener. Owns the pieces that belong to no surface in particular:
@@ -59,6 +61,7 @@ export function KeyboardShortcuts() {
 
 	useEffect(() => {
 		const onKeyDown = (e: KeyboardEvent) => {
+			if (isComposingKey(e)) return;
 			// ── Tab is dead (owner, 2026-09-17): preventDefault even when
 			// nothing is bound to it — browser tab-focus is abandoned, and
 			// the default action runs after dispatch, so suppressing it here
