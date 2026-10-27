@@ -1,0 +1,12 @@
+# Fork-only packaging overlay. Keep the upstream builder file unchanged.
+# Use --config electron-builder.japanese.yml and --publish never for local builds.
+extends: ./electron-builder.yml
+appId: com.gustavo434.learnharness.japanese
+productName: LearnHarness Japanese
+extraMetadata:
+  productName: LearnHarness Japanese
+publish:
+  - provider: github
+    owner: gustavo434
+    repo: learnharness
+    releaseType: draft

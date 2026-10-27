@@ -1,3 +1,5 @@
+import { japaneseTurnProfile } from "./japanese.ts";
+import { composeJapaneseInstructions } from "../agent/japanese.ts";
 import type { Usage } from "@earendil-works/pi-ai";
 import {
 	createPracticeAgent,
@@ -242,6 +244,9 @@ export async function handleChatInput(
 	let conversationEngine: PiEngine;
 	try { conversationEngine = piEngineForSpec(conversation, () => callPurpose.background, lifecycle); }
 	catch { return Response.json({ error: conversation.provider === "chatgpt" ? chatGPTStreamError("model catalog") : isSubscriptionProvider(conversation.provider) ? nativeSubscriptionError(conversation.provider, "model catalog") : "The selected model is unavailable." }, { status: 503 }); }
+	let japanese;
+	try { japanese = await japaneseTurnProfile(); }
+	catch { return Response.json({ error: "Japanese preferences could not be loaded. Check your saved Japanese settings." }, { status: 503 }); }
 	const modelIdForCompaction = `${conversationEngine.model.provider}:${conversationEngine.model.id}`;
 	await ensureCompacted(
 		{
@@ -254,7 +259,9 @@ export async function handleChatInput(
 				effective.compaction?.thresholdTokens,
 				catalogContextLimits().get(modelIdForCompaction),
 			),
-			systemPromptTokens: Math.ceil(composeInstructions(record.kind === "practice" ? "practice" : "teacher").length / 4),
+			systemPromptTokens: Math.ceil((japanese
+				? composeJapaneseInstructions(record.kind === "practice" ? "practice" : "teacher", japanese, effective.agent.prompts)
+				: composeInstructions(record.kind === "practice" ? "practice" : "teacher")).length / 4),
 		},
 		chatId,
 	);
@@ -390,12 +397,13 @@ export async function handleChatInput(
 		restoreAutomatic: (automaticIds, retainedIds) => restoreUncommittedAutomatic(chatId, constructed, automaticIds, retainedIds),
 	});
 	const agentOpts: AgentBuildOptions = {
+		...(japanese ? { japanese } : {}),
 		engine,
 		callPurpose,
 		requestCycle,
 		messages: asAgentMessages(merged),
 		onUsage: collectUsage,
-		toolToggles: effective.agent.tools,
+		toolToggles: japanese ? { ...effective.agent.tools, explain: effective.agent.tools.explain ?? true } : effective.agent.tools,
 		// Debug (owner, 2026-10-04): teacher/prober raw provider events under
 		// LH_PROVIDER_EVENTS=1 (provider-events.ts); no-op otherwise.
 		chatId,
