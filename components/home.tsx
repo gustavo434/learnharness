@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingKey } from "@/src/core";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CornerDownLeftIcon, DumbbellIcon } from "lucide-react";
@@ -256,6 +258,7 @@ export function Home({
 							setTopic(e.target.value);
 						}}
 						onKeyDown={(e) => {
+							if (isComposingKey(e)) return;
 							// Esc ends dictation (the dictate decisions: click-again or
 							// Esc) — stopPropagation claims it (keyboard wave A) so
 							// the window chain doesn't also abort a turn.

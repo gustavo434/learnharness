@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingKey } from "@/src/core";
+
 import { useCallback, useRef, useState } from "react";
 import { ChevronRightIcon } from "lucide-react";
 import { ToolContentResponse } from "@/components/ai-elements/message";
@@ -128,6 +130,7 @@ export function PracticeDock({ problemCallId, input, expanded, onExpand, onSubmi
 						setThinking(e.target.value);
 					}}
 					onKeyDown={(e) => {
+						if (isComposingKey(e)) return;
 						// Esc ends dictation — stopPropagation claims it (the
 						// keyboard machine) so the window chain doesn't also fire.
 						if (e.key === "Escape" && onEscape) {

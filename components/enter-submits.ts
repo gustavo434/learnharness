@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingKey } from "@/src/core";
+
 /**
  * ENTER SUBMITS — regardless of where focus is (owner round 6, 2026-10-05).
  * The dictation reality: the learner dictates into the dock's field without
@@ -64,6 +66,7 @@ export function useEnterSubmits(submit: () => void): void {
 	submitRef.current = submit;
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => {
+			if (isComposingKey(e)) return;
 			if (e.key !== "Enter") return;
 			if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
 			if (isTypingSurface(e)) return;

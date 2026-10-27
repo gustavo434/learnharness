@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingKey } from "@/src/core";
+
 import { useCallback } from "react";
 import { joinDictation, useDictationTarget } from "@/components/dictation";
 
@@ -67,6 +69,7 @@ export function ReadingThinkingField({
 				   get implicitly from their py-2. Line-height stays 1.25 (the
 				   caret law, typography round 2). */
 				onKeyDown={(e) => {
+					if (isComposingKey(e)) return;
 					if (e.key === "Escape") {
 						// Esc stops dictation (the strip's rule) — claimed so the
 						// window chain doesn't also read it as abort-turn.

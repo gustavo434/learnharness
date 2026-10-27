@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingKey } from "@/src/core";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDownIcon, ChevronRightIcon, PlayIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -480,6 +482,7 @@ function QuestionDockForm({
 	useEffect(() => {
 		if (!active || rowCount === 0) return;
 		const onKeyDown = (e: KeyboardEvent) => {
+			if (isComposingKey(e)) return;
 			const t = e.target as HTMLElement | null;
 			// A TYPING field is where keys mean text (owner round 4): the
 			// thinking/answer fields, search boxes, renames — never a range
@@ -706,6 +709,7 @@ function QuestionDockForm({
 										setSel((prev) => (prev.otherSelected ? prev : toggleOther(selectMode, prev)));
 									}}
 									onKeyDown={(e) => {
+										if (isComposingKey(e)) return;
 										// Esc escapes the typing (owner refinement round,
 										// 2026-09-24): focus leaves the input, the row STAYS
 										// selected — deselection is the next Space's job, acting
@@ -858,6 +862,7 @@ function QuestionDockForm({
 								setText(e.target.value);
 							}}
 							onKeyDown={(e) => {
+								if (isComposingKey(e)) return;
 								// Esc ends dictation (the dictate decisions: click-again
 								// or Esc) — stopPropagation claims it (keyboard wave
 								// A) so the window chain doesn't also abort a turn.
@@ -887,6 +892,7 @@ function QuestionDockForm({
 								setThinking(e.target.value);
 							}}
 							onKeyDown={(e) => {
+								if (isComposingKey(e)) return;
 								// Esc ends dictation (the dictate decisions: click-again
 								// or Esc) — stopPropagation claims it (keyboard wave
 								// A) so the window chain doesn't also abort a turn.
